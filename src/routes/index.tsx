@@ -1,26 +1,45 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import climaLogo from "@/assets/clima-logo.png";
 
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "CLIMA — Banda" },
+      { name: "description", content: "Sitio oficial de la banda CLIMA." },
+      { property: "og:title", content: "CLIMA — Banda" },
+      { property: "og:description", content: "Sitio oficial de la banda CLIMA." },
+    ],
+  }),
+  component: HomePage,
 });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
+function HomePage() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="/placeholder.svg"
-        alt="Your app will live here!"
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background relative overflow-hidden">
+      {/* Background glow effects */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-20 blur-[120px] pointer-events-none"
+        style={{ background: "radial-gradient(circle, var(--glow-blue) 0%, transparent 70%)" }}
       />
+      <div
+        className="absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full opacity-15 blur-[100px] pointer-events-none"
+        style={{ background: "radial-gradient(circle, var(--glow-violet) 0%, transparent 70%)" }}
+      />
+
+      {/* Logo */}
+      <img
+        src={climaLogo}
+        alt="CLIMA"
+        width={500}
+        height={250}
+        className="relative z-10 mb-12"
+        style={{ animation: "float 4s ease-in-out infinite" }}
+      />
+
+      {/* CTA Button */}
+      <Link to="/info" className="glow-button relative z-10 no-underline">
+        Info
+      </Link>
     </div>
   );
-}
-
-function Index() {
-  return <PlaceholderIndex />;
 }
