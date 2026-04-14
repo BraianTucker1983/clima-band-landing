@@ -85,10 +85,14 @@ function InfoPage() {
 
           <div className="member-card max-w-sm w-full">
             {/* Photo placeholder */}
-            <div className="aspect-[3/4] bg-secondary flex items-center justify-center">
-              <div className="text-6xl font-bold gradient-text opacity-30">
-                {members[current].name.charAt(0)}
-              </div>
+            <div className="aspect-[3/4] bg-secondary overflow-hidden">
+              <img
+                src={members[current].photo}
+                alt={members[current].name}
+                className="w-full h-full object-cover"
+                width={640}
+                height={854}
+              />
             </div>
             <div className="p-6">
               <h2 className="text-2xl font-bold text-foreground">{members[current].name}</h2>
