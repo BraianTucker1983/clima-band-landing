@@ -1,45 +1,41 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, Instagram, Music, ArrowLeft, Newspaper } from "lucide-react";
-
-export const Route = createFileRoute("/info")({
-  head: () => ({
-    meta: [
-      { title: "Info — CLIMA" },
-      { name: "description", content: "Conocé a los integrantes de CLIMA." },
-      { property: "og:title", content: "Info — CLIMA" },
-      { property: "og:description", content: "Conocé a los integrantes de CLIMA." },
-    ],
-  }),
-  component: InfoPage,
-});
+import imgImanol from "@/assets/imanol.jpg";
+import imgJuan from "@/assets/juanmanuel.jpg";
+import imgAlan from "@/assets/alan.jpg";
+import imgBraian from "@/assets/braian.jpg";
 
 const members = [
   {
-    name: "Miembro 1",
-    role: "Voz",
-    bio: "Fundador y vocalista de CLIMA.",
+    name: "Imanol Insua",
+    role: "Compositor · Voz · Guitarra · Saxo",
+    bio: "Compositor, vocalista, guitarrista y saxofonista. El alma creativa detrás de CLIMA.",
+    photo: imgImanol,
     instagram: "#",
     spotify: "#",
   },
   {
-    name: "Miembro 2",
-    role: "Guitarra",
-    bio: "Guitarrista principal desde los inicios.",
+    name: "Juan Manuel Merkel",
+    role: "Guitarra · Voz",
+    bio: "Guitarrista y segunda voz. Su sonido define la identidad de CLIMA.",
+    photo: imgJuan,
     instagram: "#",
     spotify: "#",
   },
   {
-    name: "Miembro 3",
+    name: "Alan Tucker",
     role: "Bajo",
-    bio: "El groove y la base de CLIMA.",
+    bio: "El groove y la base que sostiene todo el sonido de la banda.",
+    photo: imgAlan,
     instagram: "#",
     spotify: "#",
   },
   {
-    name: "Miembro 4",
+    name: "Braian Tucker",
     role: "Batería",
-    bio: "El pulso rítmico de la banda.",
+    bio: "El pulso rítmico y la energía en vivo de CLIMA.",
+    photo: imgBraian,
     instagram: "#",
     spotify: "#",
   },
@@ -89,10 +85,14 @@ function InfoPage() {
 
           <div className="member-card max-w-sm w-full">
             {/* Photo placeholder */}
-            <div className="aspect-[3/4] bg-secondary flex items-center justify-center">
-              <div className="text-6xl font-bold gradient-text opacity-30">
-                {members[current].name.charAt(0)}
-              </div>
+            <div className="aspect-[3/4] bg-secondary overflow-hidden">
+              <img
+                src={members[current].photo}
+                alt={members[current].name}
+                className="w-full h-full object-cover"
+                width={640}
+                height={854}
+              />
             </div>
             <div className="p-6">
               <h2 className="text-2xl font-bold text-foreground">{members[current].name}</h2>
