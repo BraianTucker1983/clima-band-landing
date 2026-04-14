@@ -28,7 +28,7 @@ const members = [
     role: "Bajo",
     bio: "El groove y la base que sostiene todo el sonido de la banda.",
     photo: imgAlan,
-    instagram: "#",
+    instagram: "https://www.instagram.com/alan.tucker.716195/",
     spotify: "#",
   },
   {
@@ -36,7 +36,7 @@ const members = [
     role: "Batería",
     bio: "El pulso rítmico y la energía en vivo de CLIMA.",
     photo: imgBraian,
-    instagram: "#",
+    instagram: "https://www.instagram.com/braiantucker/",
     spotify: "#",
   },
 ];
