@@ -12,7 +12,7 @@ const members = [
     role: "Compositor · Voz · Guitarra · Saxo",
     bio: "Compositor, vocalista, guitarrista y saxofonista. El alma creativa detrás de CLIMA.",
     photo: imgImanol,
-    instagram: "#",
+    instagram: "https://www.instagram.com/imanolinsua/",
     spotify: "#",
   },
   {
@@ -20,7 +20,7 @@ const members = [
     role: "Guitarra · Voz",
     bio: "Guitarrista y segunda voz. Su sonido define la identidad de CLIMA.",
     photo: imgJuan,
-    instagram: "#",
+    instagram: "https://www.instagram.com/nanomerkel/",
     spotify: "#",
   },
   {
