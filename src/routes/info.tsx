@@ -6,6 +6,18 @@ import imgJuan from "@/assets/juanmanuel.jpg";
 import imgAlan from "@/assets/alan.jpg";
 import imgBraian from "@/assets/braian.jpg";
 
+export const Route = createFileRoute("/info")({
+  head: () => ({
+    meta: [
+      { title: "Info — CLIMA" },
+      { name: "description", content: "Conocé a los integrantes de CLIMA." },
+      { property: "og:title", content: "Info — CLIMA" },
+      { property: "og:description", content: "Conocé a los integrantes de CLIMA." },
+    ],
+  }),
+  component: InfoPage,
+});
+
 const members = [
   {
     name: "Imanol Insua",
