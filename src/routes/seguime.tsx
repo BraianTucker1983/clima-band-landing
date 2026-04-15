@@ -27,19 +27,14 @@ const fotos = [
 
 const temas = [
   {
-    name: "Nombre del Tema 1",
-    youtube: "#",
-    spotify: "#",
+    name: "El Lobo Invisible",
+    youtube: "https://www.youtube.com/watch?v=wd9jF8u-yJc",
+    spotify: "https://open.spotify.com/intl-es/track/1sYUchKZJxiRDpMveGm5Kw?si=3f789158816b41c0",
   },
   {
-    name: "Nombre del Tema 2",
-    youtube: "#",
-    spotify: "#",
-  },
-  {
-    name: "Nombre del Tema 3",
-    youtube: "#",
-    spotify: "#",
+    name: "Frontera",
+    youtube: "https://www.youtube.com/watch?v=HJlcY-RFRcE",
+    spotify: null,
   },
 ];
 
@@ -115,9 +110,6 @@ function SeguimePage() {
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-6 pb-16">
-        {/* Title */}
-        <h1 className="text-4xl md:text-5xl font-bold gradient-text text-center mb-12">Seguime</h1>
-
         {/* Photo Carousel */}
         <section className="mb-16">
           <AutoCarousel />
@@ -140,15 +132,17 @@ function SeguimePage() {
                   >
                     <Youtube className="w-5 h-5" />
                   </a>
-                  <a
-                    href={tema.spotify}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2.5 rounded-lg bg-secondary hover:bg-primary/20 text-foreground transition-colors"
-                    aria-label={`${tema.name} en Spotify`}
-                  >
-                    <Music className="w-5 h-5" />
-                  </a>
+                  {tema.spotify && (
+                    <a
+                      href={tema.spotify}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2.5 rounded-lg bg-secondary hover:bg-primary/20 text-foreground transition-colors"
+                      aria-label={`${tema.name} en Spotify`}
+                    >
+                      <Music className="w-5 h-5" />
+                    </a>
+                  )}
                 </div>
               </div>
             ))}

@@ -38,7 +38,7 @@ function HomePage() {
 
       {/* CTA Button */}
       <Link to="/seguime" className="glow-button relative z-10 no-underline">
-        Seguime
+        Seguinos
       </Link>
     </div>
   );
