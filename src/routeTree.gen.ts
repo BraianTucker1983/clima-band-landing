@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SeguimeRouteImport } from './routes/seguime'
 import { Route as NovedadesRouteImport } from './routes/novedades'
 import { Route as InfoRouteImport } from './routes/info'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SeguimeRoute = SeguimeRouteImport.update({
+  id: '/seguime',
+  path: '/seguime',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NovedadesRoute = NovedadesRouteImport.update({
   id: '/novedades',
   path: '/novedades',
@@ -33,34 +39,45 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/info': typeof InfoRoute
   '/novedades': typeof NovedadesRoute
+  '/seguime': typeof SeguimeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/info': typeof InfoRoute
   '/novedades': typeof NovedadesRoute
+  '/seguime': typeof SeguimeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/info': typeof InfoRoute
   '/novedades': typeof NovedadesRoute
+  '/seguime': typeof SeguimeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/info' | '/novedades'
+  fullPaths: '/' | '/info' | '/novedades' | '/seguime'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/info' | '/novedades'
-  id: '__root__' | '/' | '/info' | '/novedades'
+  to: '/' | '/info' | '/novedades' | '/seguime'
+  id: '__root__' | '/' | '/info' | '/novedades' | '/seguime'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   InfoRoute: typeof InfoRoute
   NovedadesRoute: typeof NovedadesRoute
+  SeguimeRoute: typeof SeguimeRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/seguime': {
+      id: '/seguime'
+      path: '/seguime'
+      fullPath: '/seguime'
+      preLoaderRoute: typeof SeguimeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/novedades': {
       id: '/novedades'
       path: '/novedades'
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   InfoRoute: InfoRoute,
   NovedadesRoute: NovedadesRoute,
+  SeguimeRoute: SeguimeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
