@@ -22,7 +22,7 @@ const members = [
   {
     name: "Imanol Insua",
     role: "Compositor · Voz · Guitarra · Saxo",
-    bio: "Compositor, vocalista, guitarrista y saxofonista. El alma creativa detrás de CLIMA.",
+    
     photo: imgImanol,
     instagram: "https://www.instagram.com/imanolinsua/",
     spotify: "#",
@@ -30,7 +30,7 @@ const members = [
   {
     name: "Juan Manuel Merkel",
     role: "Guitarra · Voz",
-    bio: "Guitarrista y segunda voz. Su sonido define la identidad de CLIMA.",
+    
     photo: imgJuan,
     instagram: "https://www.instagram.com/nanomerkel/",
     spotify: "#",
@@ -38,7 +38,7 @@ const members = [
   {
     name: "Alan Tucker",
     role: "Bajo",
-    bio: "El groove y la base que sostiene todo el sonido de la banda.",
+    
     photo: imgAlan,
     instagram: "https://www.instagram.com/alan.tucker.716195/",
     spotify: "#",
@@ -46,7 +46,7 @@ const members = [
   {
     name: "Braian Tucker",
     role: "Batería",
-    bio: "El pulso rítmico y la energía en vivo de CLIMA.",
+    
     photo: imgBraian,
     instagram: "https://www.instagram.com/braiantucker/",
     spotify: "#",
@@ -110,9 +110,6 @@ function InfoPage() {
               <h2 className="text-2xl font-bold text-foreground">{members[current].name}</h2>
               <p className="text-primary text-sm font-semibold uppercase tracking-wider mt-1">
                 {members[current].role}
-              </p>
-              <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
-                {members[current].bio}
               </p>
               <div className="flex gap-3 mt-5">
                 <a
