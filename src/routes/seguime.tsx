@@ -5,6 +5,14 @@ import imgImanol from "@/assets/imanol.jpg";
 import imgJuan from "@/assets/juanmanuel.jpg";
 import imgAlan from "@/assets/alan.jpg";
 import imgBraian from "@/assets/braian.jpg";
+import imgFoto5 from "@/assets/foto5.jpg";
+import imgFoto6 from "@/assets/foto6.jpg";
+import imgFoto7 from "@/assets/foto7.jpg";
+import imgFoto8 from "@/assets/foto8.jpg";
+import imgFoto9 from "@/assets/foto9.jpg";
+import imgFoto10 from "@/assets/foto10.jpg";
+import imgFoto11 from "@/assets/foto11.jpg";
+import imgFoto12 from "@/assets/foto12.jpg";
 
 export const Route = createFileRoute("/seguime")({
   head: () => ({
@@ -23,6 +31,14 @@ const fotos = [
   { src: imgJuan, alt: "Juan Manuel" },
   { src: imgAlan, alt: "Alan" },
   { src: imgBraian, alt: "Braian" },
+  { src: imgFoto5, alt: "CLIMA - Selfie nocturna" },
+  { src: imgFoto6, alt: "CLIMA - Noche" },
+  { src: imgFoto7, alt: "CLIMA - Espejo" },
+  { src: imgFoto8, alt: "CLIMA - Tocando en vivo" },
+  { src: imgFoto9, alt: "CLIMA - Banda en vivo" },
+  { src: imgFoto10, alt: "CLIMA - Escenario" },
+  { src: imgFoto11, alt: "CLIMA - Serafín" },
+  { src: imgFoto12, alt: "CLIMA - Grupo" },
 ];
 
 const temas = [
