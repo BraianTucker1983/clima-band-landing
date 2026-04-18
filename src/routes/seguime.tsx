@@ -13,6 +13,7 @@ import imgFoto9 from "@/assets/foto9.jpg";
 import imgFoto10 from "@/assets/foto10.jpg";
 import imgFoto11 from "@/assets/foto11.jpg";
 import imgFoto12 from "@/assets/foto12.jpg";
+import bgSeguime from "@/assets/seguime-bg.png";
 import imgFoto13 from "@/assets/foto13.png";
 import imgFoto14 from "@/assets/foto14.png";
 import imgFoto15 from "@/assets/foto15.png";
@@ -113,6 +114,13 @@ function AutoCarousel() {
 function SeguimePage() {
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Background image */}
+      <div
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat pointer-events-none"
+        style={{ backgroundImage: `url(${bgSeguime})` }}
+      />
+      {/* Dark overlay for readability */}
+      <div className="fixed inset-0 bg-background/80 pointer-events-none" />
       {/* Background glow */}
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] opacity-15 blur-[120px] pointer-events-none"
