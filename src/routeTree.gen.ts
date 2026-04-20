@@ -13,6 +13,7 @@ import { Route as SeguimeRouteImport } from './routes/seguime'
 import { Route as NovedadesRouteImport } from './routes/novedades'
 import { Route as InfoRouteImport } from './routes/info'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LetrasTemaRouteImport } from './routes/letras/$tema'
 
 const SeguimeRoute = SeguimeRouteImport.update({
   id: '/seguime',
@@ -34,18 +35,25 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LetrasTemaRoute = LetrasTemaRouteImport.update({
+  id: '/letras/$tema',
+  path: '/letras/$tema',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/info': typeof InfoRoute
   '/novedades': typeof NovedadesRoute
   '/seguime': typeof SeguimeRoute
+  '/letras/$tema': typeof LetrasTemaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/info': typeof InfoRoute
   '/novedades': typeof NovedadesRoute
   '/seguime': typeof SeguimeRoute
+  '/letras/$tema': typeof LetrasTemaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,14 @@ export interface FileRoutesById {
   '/info': typeof InfoRoute
   '/novedades': typeof NovedadesRoute
   '/seguime': typeof SeguimeRoute
+  '/letras/$tema': typeof LetrasTemaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/info' | '/novedades' | '/seguime'
+  fullPaths: '/' | '/info' | '/novedades' | '/seguime' | '/letras/$tema'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/info' | '/novedades' | '/seguime'
-  id: '__root__' | '/' | '/info' | '/novedades' | '/seguime'
+  to: '/' | '/info' | '/novedades' | '/seguime' | '/letras/$tema'
+  id: '__root__' | '/' | '/info' | '/novedades' | '/seguime' | '/letras/$tema'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +76,7 @@ export interface RootRouteChildren {
   InfoRoute: typeof InfoRoute
   NovedadesRoute: typeof NovedadesRoute
   SeguimeRoute: typeof SeguimeRoute
+  LetrasTemaRoute: typeof LetrasTemaRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/letras/$tema': {
+      id: '/letras/$tema'
+      path: '/letras/$tema'
+      fullPath: '/letras/$tema'
+      preLoaderRoute: typeof LetrasTemaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,7 +124,17 @@ const rootRouteChildren: RootRouteChildren = {
   InfoRoute: InfoRoute,
   NovedadesRoute: NovedadesRoute,
   SeguimeRoute: SeguimeRoute,
+  LetrasTemaRoute: LetrasTemaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
