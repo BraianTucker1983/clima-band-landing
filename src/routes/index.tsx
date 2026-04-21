@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import climaLogo from "@/assets/clima-logo.png";
+import climaLogo from "@/assets/logo-clima.png";
+import bgSeguime from "@/assets/seguime-bg.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -15,8 +16,18 @@ export const Route = createFileRoute("/")({
 
 function HomePage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background relative overflow-hidden">
-      {/* Background glow effects */}
+  <div className="relative min-h-screen overflow-hidden">
+    
+    {/* Fondo */}
+    <div
+      className="fixed inset-0 bg-cover bg-center bg-no-repeat pointer-events-none"
+      style={{ backgroundImage: `url(${bgSeguime})` }}
+    />
+
+    {/* Contenido */}
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background relative">
+      
+      {/* efectos */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-20 blur-[120px] pointer-events-none"
         style={{ background: "radial-gradient(circle, var(--glow-blue) 0%, transparent 70%)" }}
@@ -27,19 +38,24 @@ function HomePage() {
       />
 
       {/* Logo */}
-      <img
-        src={climaLogo}
-        alt="CLIMA"
-        width={500}
-        height={250}
-        className="relative z-10 mb-12"
-        style={{ animation: "float 4s ease-in-out infinite" }}
-      />
+      <div className="flex flex-col items-center justify-center mb-12 z-10">
+        <span className="text-4xl tracking-[0.3em] text-white/70 mb-4 pb-[2px]">
+          SOMOS
+        </span>
 
-      {/* CTA Button */}
+        <img
+          src={climaLogo}
+          alt="CLIMA"
+          width={500}
+          height={250}
+          style={{ animation: "float 4s ease-in-out infinite" }}
+        />
+      </div>
+
+      {/* Botón */}
       <Link to="/seguime" className="glow-button relative z-10 no-underline">
         Seguinos
       </Link>
     </div>
-  );
-}
+  </div>
+)};

@@ -187,7 +187,8 @@ function SeguimePage() {
                   {/* LETRA */}
                   {tema.letra && (
                     <Link
-                      to={`/letras/${tema.letra}`}
+                      to="/letras/$tema"
+                      params={{ tema: tema.letra }}
                       className="px-3 py-2 rounded-lg bg-secondary hover:bg-primary/20 text-foreground text-sm font-semibold"
                     >
                       Letra

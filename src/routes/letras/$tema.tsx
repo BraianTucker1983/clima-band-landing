@@ -10,7 +10,7 @@ const letrasData = {
   lobo: {
     titulo: "El Lobo Invisible",
     portada: loboImg,
-    letra: `Lobo Invisible
+    letra: `
 
 Fuí un hermoso niño cursi
 descarrié de los renglones
@@ -60,7 +60,7 @@ un lobo invisible...`,
   frontera: {
     titulo: "Frontera",
     portada: fronteraImg,
-    letra: `Frontera
+    letra: `
 
 El mundo está cambiando chango
 Ya nada es como antes
@@ -120,7 +120,7 @@ function LetraPage() {
       <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" />
 
       {/* Contenido */}
-      <div className="relative z-10 max-w-2xl mx-auto px-6 py-12">
+      <div className="relative z-10 max-w-2xl mx-auto px-6 py-12 text-center">
         
         <Link
           to="/seguime"

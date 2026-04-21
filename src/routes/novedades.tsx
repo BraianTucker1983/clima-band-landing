@@ -14,16 +14,15 @@ export const Route = createFileRoute("/novedades")({
 });
 
 const fechas = [
-  { date: "25 ABR 2026", venue: "Teatro Vorterix", city: "Buenos Aires", ticketLink: "#" },
-  { date: "10 MAY 2026", venue: "Sala del Museo", city: "Córdoba", ticketLink: "#" },
-  { date: "28 MAY 2026", venue: "La Trastienda", city: "Montevideo", ticketLink: "#" },
+  { date: "25 ABR 2026", venue: "Tomacco's", city: "Pueblo San Jose", ticketLink: "#" },
+  
 ];
 
 const noticias = [
   {
-    date: "10 ABR 2026",
-    title: "Nuevo single próximamente",
-    description: "CLIMA anuncia su próximo single que estará disponible en todas las plataformas.",
+    date: "20 ABR 2026",
+    title: "Cuatro temillas nuevos próximamente",
+    description: "Terminamos de grabas el bajo y la bateria en cuatro canciones nuevas, espero lo disfruten tanto como nosotros en este proceso.",
   },
   {
     date: "1 MAR 2026",
