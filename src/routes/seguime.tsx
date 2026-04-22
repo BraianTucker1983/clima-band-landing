@@ -152,6 +152,15 @@ function SeguimePage() {
           <AutoCarousel />
         </section>
 
+        <section className="mb-10 flex justify-center">
+          <Link
+            to="/biografia"
+            className="glow-button text-sm !py-3 !px-6 no-underline"
+          >
+            Historia            
+          </Link>
+        </section>
+
         <section>
           <h2 className="text-2xl font-bold text-foreground mb-6">Temas</h2>
 
