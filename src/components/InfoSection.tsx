@@ -67,10 +67,7 @@ export function InfoSection() {
             <div className="flex justify-center gap-3 mt-4">
               <a href={members[current].instagram} target="_blank">
                 <Instagram />
-              </a>
-              <a href={members[current].spotify} target="_blank">
-                <Music />
-              </a>
+              </a>              
             </div>
           </div>
         </div>

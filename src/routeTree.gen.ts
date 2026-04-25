@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SeguimeRouteImport } from './routes/seguime'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as LetrasTemaRouteImport } from './routes/letras/$tema'
 
 const SeguimeRoute = SeguimeRouteImport.update({
   id: '/seguime',
@@ -23,40 +22,31 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LetrasTemaRoute = LetrasTemaRouteImport.update({
-  id: '/letras/$tema',
-  path: '/letras/$tema',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/seguime': typeof SeguimeRoute
-  '/letras/$tema': typeof LetrasTemaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/seguime': typeof SeguimeRoute
-  '/letras/$tema': typeof LetrasTemaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/seguime': typeof SeguimeRoute
-  '/letras/$tema': typeof LetrasTemaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/seguime' | '/letras/$tema'
+  fullPaths: '/' | '/seguime'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/seguime' | '/letras/$tema'
-  id: '__root__' | '/' | '/seguime' | '/letras/$tema'
+  to: '/' | '/seguime'
+  id: '__root__' | '/' | '/seguime'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SeguimeRoute: typeof SeguimeRoute
-  LetrasTemaRoute: typeof LetrasTemaRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,20 +65,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/letras/$tema': {
-      id: '/letras/$tema'
-      path: '/letras/$tema'
-      fullPath: '/letras/$tema'
-      preLoaderRoute: typeof LetrasTemaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SeguimeRoute: SeguimeRoute,
-  LetrasTemaRoute: LetrasTemaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

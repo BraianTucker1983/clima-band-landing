@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Youtube, X } from "lucide-react";
+import { ArrowLeft, Youtube, X, Instagram } from "lucide-react";
 import { motion, useAnimation, useMotionValue } from "framer-motion";
 
+import { SocialCard } from "@/components/SocialCard";
 import { InfoSection } from "@/components/InfoSection";
 import { Novedades } from "@/components/novedades";
 import { Biografia } from "@/components/biografia";
@@ -210,6 +211,16 @@ Tras la frontera
 
       {/* CONTENT */}
       <div className="relative z-10 max-w-4xl mx-auto px-6 pb-20 space-y-14">
+
+        {/*SOCIALCARD */}
+        <div className="flex justify-center w-full">
+          <SocialCard
+            title="Seguinos en"
+            subtitle="@climamusica"
+            url="https://www.instagram.com/climamusica/"
+            icon={<Instagram className="w-8 h-8 text-white" />}
+          />
+        </div>
 
         {/* CAROUSEL */}
         <AutoCarousel />
