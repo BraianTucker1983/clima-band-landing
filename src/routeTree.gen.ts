@@ -10,30 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SeguimeRouteImport } from './routes/seguime'
-import { Route as NovedadesRouteImport } from './routes/novedades'
-import { Route as InfoRouteImport } from './routes/info'
-import { Route as BiografiaRouteImport } from './routes/biografia'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LetrasTemaRouteImport } from './routes/letras/$tema'
 
 const SeguimeRoute = SeguimeRouteImport.update({
   id: '/seguime',
   path: '/seguime',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NovedadesRoute = NovedadesRouteImport.update({
-  id: '/novedades',
-  path: '/novedades',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InfoRoute = InfoRouteImport.update({
-  id: '/info',
-  path: '/info',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BiografiaRoute = BiografiaRouteImport.update({
-  id: '/biografia',
-  path: '/biografia',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -49,55 +31,30 @@ const LetrasTemaRoute = LetrasTemaRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/biografia': typeof BiografiaRoute
-  '/info': typeof InfoRoute
-  '/novedades': typeof NovedadesRoute
   '/seguime': typeof SeguimeRoute
   '/letras/$tema': typeof LetrasTemaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/biografia': typeof BiografiaRoute
-  '/info': typeof InfoRoute
-  '/novedades': typeof NovedadesRoute
   '/seguime': typeof SeguimeRoute
   '/letras/$tema': typeof LetrasTemaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/biografia': typeof BiografiaRoute
-  '/info': typeof InfoRoute
-  '/novedades': typeof NovedadesRoute
   '/seguime': typeof SeguimeRoute
   '/letras/$tema': typeof LetrasTemaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/biografia'
-    | '/info'
-    | '/novedades'
-    | '/seguime'
-    | '/letras/$tema'
+  fullPaths: '/' | '/seguime' | '/letras/$tema'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/biografia' | '/info' | '/novedades' | '/seguime' | '/letras/$tema'
-  id:
-    | '__root__'
-    | '/'
-    | '/biografia'
-    | '/info'
-    | '/novedades'
-    | '/seguime'
-    | '/letras/$tema'
+  to: '/' | '/seguime' | '/letras/$tema'
+  id: '__root__' | '/' | '/seguime' | '/letras/$tema'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BiografiaRoute: typeof BiografiaRoute
-  InfoRoute: typeof InfoRoute
-  NovedadesRoute: typeof NovedadesRoute
   SeguimeRoute: typeof SeguimeRoute
   LetrasTemaRoute: typeof LetrasTemaRoute
 }
@@ -109,27 +66,6 @@ declare module '@tanstack/react-router' {
       path: '/seguime'
       fullPath: '/seguime'
       preLoaderRoute: typeof SeguimeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/novedades': {
-      id: '/novedades'
-      path: '/novedades'
-      fullPath: '/novedades'
-      preLoaderRoute: typeof NovedadesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/info': {
-      id: '/info'
-      path: '/info'
-      fullPath: '/info'
-      preLoaderRoute: typeof InfoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/biografia': {
-      id: '/biografia'
-      path: '/biografia'
-      fullPath: '/biografia'
-      preLoaderRoute: typeof BiografiaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -151,9 +87,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BiografiaRoute: BiografiaRoute,
-  InfoRoute: InfoRoute,
-  NovedadesRoute: NovedadesRoute,
   SeguimeRoute: SeguimeRoute,
   LetrasTemaRoute: LetrasTemaRoute,
 }

@@ -1,214 +1,328 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Newspaper, Users, Youtube } from "lucide-react";
+import { ArrowLeft, Youtube, X } from "lucide-react";
+import { motion, useAnimation, useMotionValue } from "framer-motion";
 
-import imgImanol from "@/assets/imanol.jpg";
-import imgJuan from "@/assets/juanmanuel.jpg";
-import imgAlan from "@/assets/alan.jpg";
-import imgBraian from "@/assets/braian.jpg";
-import imgFoto5 from "@/assets/foto5.jpg";
-import imgFoto6 from "@/assets/foto6.jpg";
-import imgFoto7 from "@/assets/foto7.jpg";
-import imgFoto8 from "@/assets/foto8.jpg";
-import imgFoto9 from "@/assets/foto9.jpg";
-import imgFoto10 from "@/assets/foto10.jpg";
-import imgFoto11 from "@/assets/foto11.jpg";
-import imgFoto12 from "@/assets/foto12.jpg";
-import imgFoto13 from "@/assets/foto13.png";
-import imgFoto14 from "@/assets/foto14.png";
-import imgFoto15 from "@/assets/foto15.png";
-import imgFoto16 from "@/assets/foto16.png";
-import imgFoto17 from "@/assets/foto17.png";
-import imgFoto18 from "@/assets/foto18.png";
+import { InfoSection } from "@/components/InfoSection";
+import { Novedades } from "@/components/novedades";
+import { Biografia } from "@/components/biografia";
+
 import bgSeguime from "@/assets/seguime-bg.png";
 
 export const Route = createFileRoute("/seguime")({
-  head: () => ({
-    meta: [
-      { title: "Seguime — CLIMA" },
-      { name: "description", content: "Seguí a CLIMA. Fotos, música y más." },
-      { property: "og:title", content: "Seguime — CLIMA" },
-      { property: "og:description", content: "Seguí a CLIMA. Fotos, música y más." },
-    ],
-  }),
   component: SeguimePage,
 });
 
-const fotos = [
-  { src: imgImanol, alt: "Imanol" },
-  { src: imgJuan, alt: "Juan Manuel" },
-  { src: imgAlan, alt: "Alan" },
-  { src: imgBraian, alt: "Braian" },
-  { src: imgFoto5, alt: "CLIMA - Selfie nocturna" },
-  { src: imgFoto6, alt: "CLIMA - Noche" },
-  { src: imgFoto7, alt: "CLIMA - Espejo" },
-  { src: imgFoto8, alt: "CLIMA - Tocando en vivo" },
-  { src: imgFoto9, alt: "CLIMA - Banda en vivo" },
-  { src: imgFoto10, alt: "CLIMA - Escenario" },
-  { src: imgFoto11, alt: "CLIMA - Serafín" },
-  { src: imgFoto12, alt: "CLIMA - Grupo" },
-  { src: imgFoto13, alt: "CLIMA - Saxo en vivo" },
-  { src: imgFoto14, alt: "CLIMA - Bajista en vivo" },
-  { src: imgFoto15, alt: "CLIMA - Banda tocando" },
-  { src: imgFoto16, alt: "CLIMA - Escenario Suarvederos" },
-  { src: imgFoto17, alt: "CLIMA - Grupo al aire libre" },
-  { src: imgFoto18, alt: "CLIMA - Selfie del grupo" },
-];
+/* ---------------- IMÁGENES ---------------- */
+const images = import.meta.glob<string>(
+  "@/assets/carousel/*.{jpg,png,jpeg}",
+  { eager: true, import: "default" }
+);
 
+const fotos = Object.entries(images).map(([path, src]) => ({
+  src,
+  alt: path.split("/").pop()?.split(".")[0] || "foto",
+}));
+
+/* ---------------- TEMAS ---------------- */
 const temas = [
   {
     name: "El Lobo Invisible",
     youtube: "https://www.youtube.com/watch?v=wd9jF8u-yJc",
-    spotify: "https://open.spotify.com/intl-es/track/1sYUchKZJxiRDpMveGm5Kw?si=3f789158816b41c0",
     letra: "lobo",
   },
   {
     name: "Frontera",
     youtube: "https://www.youtube.com/watch?v=HJlcY-RFRcE",
-    spotify: "https://open.spotify.com/intl-es/album/0vhEJykdHPBGgLzH9xURNC?si=Exa9h5YMQSeKioAvQhUcPA",
     letra: "frontera",
   },
 ];
 
+/* ---------------- HELPERS ---------------- */
+function getYoutubeId(url: string) {
+  return url.split("v=")[1]?.split("&")[0];
+}
+
+/* ---------------- CAROUSEL ---------------- */
 function AutoCarousel() {
-  const fotosCarrusel = fotos.slice(4);
+  const controls = useAnimation();
+  const ref = useRef<HTMLDivElement>(null);
 
-  const [current, setCurrent] = useState(0);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const x = useMotionValue(0);
 
-  useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      setCurrent((c) => (c === fotosCarrusel.length - 1 ? 0 : c + 1));
-    }, 3500);
-
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [fotosCarrusel.length]);
+  const [width, setWidth] = useState(0);
+  const [dragging, setDragging] = useState(false);
 
   useEffect(() => {
-    setCurrent(0);
-  }, [fotosCarrusel.length]);
+    if (ref.current) {
+      setWidth(ref.current.scrollWidth - ref.current.offsetWidth);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!dragging && width > 0) {
+      controls.start({
+        x: -width / 2,
+        transition: {
+          duration: 40,
+          ease: "linear",
+          repeat: Infinity,
+        },
+      });
+    }
+  }, [dragging, width]);
 
   return (
-    <div className="relative w-full max-w-lg mx-auto overflow-hidden rounded-xl border border-border">
-      <div
-        className="flex transition-transform duration-700 ease-in-out"
-        style={{ transform: `translateX(-${current * 100}%)` }}
+    <div className="w-full max-w-lg mx-auto overflow-hidden rounded-xl border border-white/10 bg-white/5">
+      <motion.div
+        ref={ref}
+        style={{ x }}
+        className="flex gap-4 cursor-grab active:cursor-grabbing"
+        drag="x"
+        dragConstraints={{ left: -width, right: 0 }}
+        animate={controls}
+        onDragStart={() => setDragging(true)}
+        onDragEnd={() => setDragging(false)}
       >
-        {fotosCarrusel.map((foto, i) => (
-          <img
+        {[...fotos, ...fotos].map((f, i) => (
+          <motion.img
             key={i}
-            src={foto.src}
-            alt={foto.alt}
-            className="w-full shrink-0 aspect-[3/4] object-cover"
+            src={f.src}
+            className="w-[250px] h-[330px] object-cover rounded-lg shrink-0"
+            whileTap={{ scale: 0.95 }}
+            draggable={false}
           />
         ))}
-      </div>
-
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-        {fotosCarrusel.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrent(i)}
-            className={`w-2.5 h-2.5 rounded-full transition-all ${
-              i === current ? "bg-primary w-8" : "bg-secondary/80"
-            }`}
-          />
-        ))}
-      </div>
+      </motion.div>
     </div>
   );
 }
 
+/* ---------------- PAGE ---------------- */
 function SeguimePage() {
+  const [openPlayer, setOpenPlayer] = useState<number | null>(null);
+  const [showLyrics, setShowLyrics] = useState<number | null>(null);
+  const [openBio, setOpenBio] = useState(false);
+
+  /* LETRAS */
+const letras = {
+  lobo: `
+Fuí un hermoso niño cursi
+descarrié de los renglones
+un piedrazo en la ventana
+me ofreció mirar al sol
+
+Fuí parche de bicicleta
+fantasmee por los rincones
+se me escapó la pelota
+cuando iba a hacer el gol
+
+y te vi, estabas temprano en la soledad
+tatuaste mi mano con tempera azul
+para mi era el cielo...
+
+Fuí a cambiar mis figuritas
+por tarjetitas magnéticas
+la electricidad frenética
+de tiempo y velocidad
+
+Nos llevó hacia un infinito
+de compás irreverente
+te perdiste entre la gente
+y el bombo de la ciudad
+
+y me vi, estaba pensando y de tanto pensar
+quemé los fusibles de la realidad
+me quedé alumbrando con la linterna
+a un lobo invisible
+
+Fuí a la vuelta de la esquina
+para respirar un rato
+a sacarme los zapatos
+de la desesperación
+
+había un lago de silencios
+que se reflejó en mis ojos
+desbordaba en tu ventana
+donde se rompía el sol
+
+y te vi, estabas temblando de frío y amor
+la frágil frecuencia nació entre los dos
+llenaste mi mano con tempera azul
+para mi era el cielo o un lobo feroz
+un lobo invisible...
+  `,
+
+  frontera: `
+El mundo está cambiando chango
+Ya nada es como antes
+Lo dicen los parlantes
+Hay fuego en la frontera
+
+La vida es un instante
+Un mar de aplicaciones
+Nos quedan las canciones
+Para sobrevivir
+
+A ver quién canta por verdadero amor
+Suelta tu primavera
+Alza tu mano para que pueda ver
+Tras la frontera
+
+Los siglos que sembramos
+Con lágrimas de tiempo
+Dónde estará mi hermano
+Que hoy no fue a la escuela
+
+No olvides mi nombre
+Quizás nos encontremos
+Celebrando la lluvia
+Que cae sobre la tierra
+
+A ver quién baila por verdadero amor
+Esta es tu primavera
+Alza tu mano para que pueda ver
+Tras la frontera
+  `,
+};
+
+  const togglePlayer = (i: number) => {
+    setOpenPlayer((prev) => (prev === i ? null : i));
+  };
+
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
+    <div className="min-h-screen bg-background relative">
+
+      {/* BACKGROUND */}
       <div
-        className="fixed inset-0 bg-cover bg-center bg-no-repeat pointer-events-none"
+        className="fixed inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${bgSeguime})` }}
       />
-      <div className="fixed inset-0 bg-background/80 pointer-events-none" />
+      <div className="fixed inset-0 bg-black/70" />
 
-      <div className="relative z-10 flex items-center justify-between px-6 py-6 max-w-5xl mx-auto flex-wrap gap-3">
-        <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+      {/* NAV */}
+      <div className="relative z-10 px-6 py-6 max-w-5xl mx-auto">
+        <Link to="/" className="flex items-center gap-2 text-white">
           <ArrowLeft className="w-5 h-5" />
-          <span>Volver</span>
+          Volver
         </Link>
-        <div className="flex items-center gap-3">
-          <Link to="/info" className="flex items-center gap-2 glow-button text-sm !py-2 !px-4 no-underline">
-            <Users className="w-4 h-4" />
-            Info
-          </Link>
-          <Link to="/novedades" className="flex items-center gap-2 glow-button text-sm !py-2 !px-4 no-underline">
-            <Newspaper className="w-4 h-4" />
-            Novedades
-          </Link>
+      </div>
+
+      {/* CONTENT */}
+      <div className="relative z-10 max-w-4xl mx-auto px-6 pb-20 space-y-14">
+
+        {/* CAROUSEL */}
+        <AutoCarousel />
+
+        {/* INFO */}
+        <InfoSection />
+
+        {/* TEMAS */}
+        <section className="bg-white/5 border border-white/10 rounded-xl p-6 space-y-4">
+  <h2 className="text-xl font-bold">Temas</h2>
+
+  {temas.map((tema, i) => (
+    <div
+      key={i}
+      className="border border-white/10 rounded-lg p-4 bg-black/20"
+    >
+      {/* HEADER */}
+      <div className="flex justify-between items-center">
+        <span className="font-semibold">{tema.name}</span>
+
+        <div className="flex items-center gap-2">
+
+          {/* YOUTUBE */}
+          <button
+            onClick={() =>
+              setOpenPlayer(openPlayer === i ? null : i)
+            }
+            className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition"
+          >
+            <Youtube className="w-5 h-5" />
+          </button>
+
+          {/* LETRA */}
+          <button
+            onClick={() =>
+              setShowLyrics(showLyrics === i ? null : i)
+            }
+            className="px-3 py-1 text-sm rounded-lg bg-white/10 hover:bg-white/20 transition"
+          >
+            Letra
+          </button>
+
         </div>
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 pb-16">
-        <section className="mb-16">
-          <AutoCarousel />
-        </section>
+      {/* 🎬 VIDEO */}
+      {openPlayer === i && (
+        <div className="mt-4">
+          <iframe
+            className="w-full aspect-video rounded-lg"
+            src={`https://www.youtube.com/embed/${getYoutubeId(
+              tema.youtube
+            )}?autoplay=1`}
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+          />
+        </div>
+      )}
 
-        <section className="mb-10 flex justify-center">
-          <Link
-            to="/biografia"
-            className="glow-button text-sm !py-3 !px-6 no-underline"
+      {/* 📄 LETRA */}
+      {showLyrics === i && (
+        <div className="mt-4 p-4 rounded-lg bg-white/5 border border-white/10 whitespace-pre-line text-sm leading-relaxed text-center">
+          {letras[tema.letra as keyof typeof letras]}
+        </div>
+      )}
+    </div>
+  ))}
+</section>
+        {/* NOVEDADES */}
+        <Novedades />
+
+        {/* BIO BUTTON */}
+        <div className="flex justify-center">
+          <button
+            onClick={() => setOpenBio(true)}
+            className="px-6 py-3 bg-white text-black rounded-xl"
           >
-            Historia            
-          </Link>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold text-foreground mb-6">Temas</h2>
-
-          <div className="space-y-3">
-            {temas.map((tema, i) => (
-              <div key={i} className="news-card flex items-center justify-between gap-4">
-                <span className="text-foreground font-semibold">{tema.name}</span>
-
-                <div className="flex items-center gap-2 shrink-0">
-                  
-                  {/* YouTube */}
-                  <a
-                    href={tema.youtube}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2.5 rounded-lg bg-secondary hover:bg-red-500/20 text-foreground transition-colors"
-                  >
-                    <Youtube className="w-5 h-5" />
-                  </a>
-
-                  {/* Spotify */}
-                  {tema.spotify && (
-                    <a
-                      href={tema.spotify}                      
-                      className="p-2.5 rounded-lg bg-secondary hover:bg-green-500/20 text-foreground transition-colors"
-                    >
-                      <svg viewBox="0 0 168 168" className="w-5 h-5 fill-current">
-                        <path d="M84 0a84 84 0 1 0 0 168 84 84 0 0 0 0-168zm38.6 121.2a5.2 5.2 0 0 1-7.2 1.7c-19.7-12-44.6-14.7-73.9-8a5.2 5.2 0 0 1-2.3-10.1c32-7.3 60-4.1 82 9.1a5.2 5.2 0 0 1 1.4 7.3zm10.2-22.6a6.5 6.5 0 0 1-9 2.1c-22.6-13.9-57-18-83.7-10a6.5 6.5 0 1 1-3.8-12.5c31-9.4 69.7-4.8 94.5 11a6.5 6.5 0 0 1 2 9.4zm.9-23.5c-27-16-71.6-17.5-97.3-9.6a7.8 7.8 0 1 1-4.6-14.9c29.8-9.2 79.4-7.4 109.7 11a7.8 7.8 0 1 1-8 13.5z"/>
-                      </svg>
-                    </a>
-                  )}
-
-                  {/* LETRA */}
-                  {tema.letra && (
-                    <Link
-                      to="/letras/$tema"
-                      params={{ tema: tema.letra }}
-                      className="px-3 py-2 rounded-lg bg-secondary hover:bg-primary/20 text-foreground text-sm font-semibold"
-                    >
-                      Letra
-                    </Link>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+            Historia
+          </button>
+        </div>
       </div>
+
+      {/* BIO MODAL */}
+{openBio && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4">
+    
+    <div className="relative max-w-lg w-full space-y-4">
+
+      {/* CARD BIO */}
+      <Biografia />
+
+      {/* BOTÓN CERRAR ABAJO */}
+      <div className="flex justify-center">
+        <button
+          onClick={() => setOpenBio(false)}
+          className="
+            px-6 py-2
+            rounded-xl
+            bg-white/10
+            text-white
+            border border-white/20
+            hover:bg-white/20
+            transition
+          "
+        >
+          Cerrar
+        </button>
+      </div>
+
+    </div>
+  </div>
+)}
+
     </div>
   );
 }
