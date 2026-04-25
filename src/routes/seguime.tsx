@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Youtube, X, Instagram } from "lucide-react";
 import { motion, useAnimation, useMotionValue } from "framer-motion";
 
-import { SocialCard } from "@/components/socialCard";
+import { SocialCard } from "@/components/SocialCard";
 import { InfoSection } from "@/components/InfoSection";
 import { Novedades } from "@/components/novedades";
 import { Biografia } from "@/components/biografia";
