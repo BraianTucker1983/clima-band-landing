@@ -7,6 +7,7 @@ import { SocialCard } from "@/components/SocialCard";
 import { InfoSection } from "@/components/InfoSection";
 import { Novedades } from "@/components/novedades";
 import { Biografia } from "@/components/biografia";
+import { Footer } from "@/components/footer";
 import { Card } from "@/components/Card";
 
 import bgSeguime from "@/assets/seguime-bg.png";
@@ -301,7 +302,11 @@ Tras la frontera
         <Card title="Historia">
           <Biografia />
         </Card>
-              
+
+      {/* FOOTER */}  
+      <Card>
+        <Footer />
+      </Card>
 
     </div>
   </div>
