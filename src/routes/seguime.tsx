@@ -7,6 +7,7 @@ import { SocialCard } from "@/components/SocialCard";
 import { InfoSection } from "@/components/InfoSection";
 import { Novedades } from "@/components/novedades";
 import { Biografia } from "@/components/biografia";
+import { Card } from "@/components/Card";
 
 import bgSeguime from "@/assets/seguime-bg.png";
 
@@ -230,110 +231,82 @@ Tras la frontera
 
         {/* TEMAS */}
         <section className="bg-white/5 border border-white/10 rounded-xl p-6 space-y-4">
-  <h2 className="text-xl font-bold">Temas</h2>
+          <h2 className="text-xl font-bold">Temas</h2>
 
-  {temas.map((tema, i) => (
-    <div
-      key={i}
-      className="border border-white/10 rounded-lg p-4 bg-black/20"
-    >
-      {/* HEADER */}
-      <div className="flex justify-between items-center">
-        <span className="font-semibold">{tema.name}</span>
+          {temas.map((tema, i) => (
+            <div
+              key={i}
+              className="border border-white/10 rounded-lg p-4 bg-black/20"
+            >
+              {/* HEADER */}
+              <div className="flex justify-between items-center">
+                <span className="font-semibold">{tema.name}</span>
 
-        <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
 
-          {/* YOUTUBE */}
-          <button
-            onClick={() =>
-              setOpenPlayer(openPlayer === i ? null : i)
-            }
-            className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition"
-          >
-            <Youtube className="w-5 h-5" />
-          </button>
+                  {/* YOUTUBE */}
+                  <button
+                    onClick={() =>
+                      setOpenPlayer(openPlayer === i ? null : i)
+                    }
+                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition"
+                  >
+                    <Youtube className="w-5 h-5" />
+                  </button>
 
-          {/* LETRA */}
-          <button
-            onClick={() =>
-              setShowLyrics(showLyrics === i ? null : i)
-            }
-            className="px-3 py-1 text-sm rounded-lg bg-white/10 hover:bg-white/20 transition"
-          >
-            Letra
-          </button>
+                  {/* LETRA */}
+                  <button
+                    onClick={() =>
+                      setShowLyrics(showLyrics === i ? null : i)
+                    }
+                    className="px-3 py-1 text-sm rounded-lg bg-white/10 hover:bg-white/20 transition"
+                  >
+                    Letra
+                  </button>
 
-        </div>
-      </div>
+                </div>
+              </div>
 
-      {/* 🎬 VIDEO */}
-      {openPlayer === i && (
-        <div className="mt-4">
-          <iframe
-            className="w-full aspect-video rounded-lg"
-            src={`https://www.youtube.com/embed/${getYoutubeId(
-              tema.youtube
-            )}?autoplay=1`}
-            allow="autoplay; encrypted-media"
-            allowFullScreen
-          />
-        </div>
-      )}
+              {/* 🎬 VIDEO */}
+              {openPlayer === i && (
+                <div className="mt-4">
+                  <iframe
+                    className="w-full aspect-video rounded-lg"
+                    src={`https://www.youtube.com/embed/${getYoutubeId(
+                      tema.youtube
+                    )}?autoplay=1`}
+                    allow="autoplay; encrypted-media"
+                    allowFullScreen
+                  />
+                </div>
+              )}
 
-      {/* 📄 LETRA */}
-      {showLyrics === i && (
-        <div className="mt-4 p-4 rounded-lg bg-white/5 border border-white/10 whitespace-pre-line text-sm leading-relaxed text-center">
-          {letras[tema.letra as keyof typeof letras]}
-        </div>
-      )}
-    </div>
-  ))}
-</section>
+              {/* 📄 LETRA */}
+              {showLyrics === i && (
+                <div className="mt-4 p-4 rounded-lg bg-white/5 border border-white/10 whitespace-pre-line text-sm leading-relaxed text-center">
+                  {letras[tema.letra as keyof typeof letras]}
+                </div>
+              )}
+            </div>
+          ))}
+        </section>
         {/* NOVEDADES */}
+        
+        <Card title="Novedades">
         <Novedades />
+        </Card>
 
-        {/* BIO BUTTON */}
-        <div className="flex justify-center">
-          <button
-            onClick={() => setOpenBio(true)}
-            className="px-6 py-3 bg-white text-black rounded-xl"
-          >
-            Historia
-          </button>
-        </div>
-      </div>
-
-      {/* BIO MODAL */}
-{openBio && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4">
-    
-    <div className="relative max-w-lg w-full space-y-4">
-
+        
       {/* CARD BIO */}
-      <Biografia />
-
-      {/* BOTÓN CERRAR ABAJO */}
-      <div className="flex justify-center">
-        <button
-          onClick={() => setOpenBio(false)}
-          className="
-            px-6 py-2
-            rounded-xl
-            bg-white/10
-            text-white
-            border border-white/20
-            hover:bg-white/20
-            transition
-          "
-        >
-          Cerrar
-        </button>
-      </div>
+        <Card title="Historia">
+          <Biografia />
+        </Card>
+              
 
     </div>
   </div>
-)}
 
-    </div>
+
+    
   );
 }

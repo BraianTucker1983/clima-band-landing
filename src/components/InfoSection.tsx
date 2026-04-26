@@ -40,19 +40,25 @@ const members = [
 export function InfoSection() {
   const [current, setCurrent] = useState(0);
 
-  const prev = () => setCurrent((c) => (c === 0 ? members.length - 1 : c - 1));
-  const next = () => setCurrent((c) => (c === members.length - 1 ? 0 : c + 1));
+  const prev = () =>
+    setCurrent((c) => (c === 0 ? members.length - 1 : c - 1));
+
+  const next = () =>
+    setCurrent((c) => (c === members.length - 1 ? 0 : c + 1));
 
   return (
-    <section id="info" className="mb-16">      
+    <div className="space-y-6">
 
       <div className="flex items-center gap-4 justify-center">
-        <button onClick={prev} className="p-3 rounded-full bg-secondary hover:bg-primary/20">
+        <button
+          onClick={prev}
+          className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition"
+        >
           <ChevronLeft />
         </button>
 
-        <div className="member-card max-w-sm w-full">
-          <div className="aspect-[3/4] bg-secondary overflow-hidden">
+        <div className="max-w-sm w-full border border-white/10 rounded-xl overflow-hidden bg-black/20">
+          <div className="aspect-[3/4] overflow-hidden">
             <img
               src={members[current].photo}
               alt={members[current].name}
@@ -61,33 +67,49 @@ export function InfoSection() {
           </div>
 
           <div className="p-6 text-center">
-            <h3 className="text-xl font-bold">{members[current].name}</h3>
-            <p className="text-primary text-sm mt-1">{members[current].role}</p>
+            <h3 className="text-xl font-bold">
+              {members[current].name}
+            </h3>
+
+            <p className="text-white/70 text-sm mt-1">
+              {members[current].role}
+            </p>
 
             <div className="flex justify-center gap-3 mt-4">
-              <a href={members[current].instagram} target="_blank">
+              <a
+                href={members[current].instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:scale-110 transition"
+              >
                 <Instagram />
-              </a>              
+              </a>
             </div>
           </div>
         </div>
 
-        <button onClick={next} className="p-3 rounded-full bg-secondary hover:bg-primary/20">
+        <button
+          onClick={next}
+          className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition"
+        >
           <ChevronRight />
         </button>
       </div>
 
-      <div className="flex justify-center gap-2 mt-6">
+      <div className="flex justify-center gap-2">
         {members.map((_, i) => (
           <button
             key={i}
             onClick={() => setCurrent(i)}
-            className={`w-2 h-2 rounded-full ${
-              i === current ? "bg-primary w-6" : "bg-secondary"
+            className={`h-2 rounded-full transition-all ${
+              i === current
+                ? "bg-white w-6"
+                : "bg-white/30 w-2"
             }`}
           />
         ))}
       </div>
-    </section>
+
+    </div>
   );
 }
