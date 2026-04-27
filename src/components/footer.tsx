@@ -14,29 +14,17 @@ export function Footer() {
       </p>
 
       {/* LINKS */}
-      <div className="flex justify-center gap-6 mt-6 text-base">
-        <a
-          href="https://www.instagram.com/climamusica/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-white transition"
-        >
-          Instagram
-        </a>
-      </div>
-
-      {/* SOCIAL ICONS */}
-      <div className="flex justify-center gap-5 mt-6 text-white/60">
-        <a
-          href="https://www.instagram.com/climamusica/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-white transition"
-        >
-          <Instagram size={22} />
-        </a>
-        
-      </div>
+      <div className="flex justify-center mt-6">
+  <a
+    href="https://www.instagram.com/climamusica/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex items-center gap-2 text-white/70 hover:text-white transition text-base"
+  >
+    <Instagram size={20} />
+    <span>@climamusica</span>
+  </a>
+</div>
 
       {/* COPYRIGHT */}
       <p className="text-sm mt-8 opacity-40">
