@@ -1,4 +1,4 @@
-import bgBio from "@/assets/seguime-bg.png";
+import bgBio from "@/assets/seguime-bg.webp";
 
 export function Biografia() {
   return (

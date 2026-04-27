@@ -6,10 +6,10 @@ import {
   Youtube,
 } from "lucide-react";
 
-import imgImanol from "@/assets/imanol.jpg";
-import imgJuan from "@/assets/juanmanuel.jpg";
-import imgAlan from "@/assets/alan.jpg";
-import imgBraian from "@/assets/braian.jpg";
+import imgImanol from "@/assets/imanol.webp";
+import imgJuan from "@/assets/juanmanuel.webp";
+import imgAlan from "@/assets/alan.webp";
+import imgBraian from "@/assets/braian.webp";
 
 // 🔥 Mapeo de íconos
 const socialIcons = {

@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Youtube, X, Instagram } from "lucide-react";
-import { motion, useAnimation, useMotionValue } from "framer-motion";
+import { motion, useMotionValue, animate } from "framer-motion";
 
 import { SocialCard } from "@/components/SocialCard";
 import { InfoSection } from "@/components/InfoSection";
@@ -10,7 +10,7 @@ import { Biografia } from "@/components/biografia";
 import { Footer } from "@/components/footer";
 import { Card } from "@/components/Card";
 
-import bgSeguime from "@/assets/seguime-bg.png";
+import bgSeguime from "@/assets/seguime-bg.webp";
 
 export const Route = createFileRoute("/seguime")({
   component: SeguimePage,
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/seguime")({
 
 /* ---------------- IMÁGENES ---------------- */
 const images = import.meta.glob<string>(
-  "@/assets/carousel/*.{jpg,png,jpeg}",
+  "/src/assets/carousel/*.webp",
   { eager: true, import: "default" }
 );
 
@@ -48,42 +48,39 @@ function getYoutubeId(url: string) {
 
 /* ---------------- CAROUSEL ---------------- */
 function AutoCarousel() {
-  const controls = useAnimation();
   const ref = useRef<HTMLDivElement>(null);
-
   const x = useMotionValue(0);
 
   const [width, setWidth] = useState(0);
   const [dragging, setDragging] = useState(false);
+  const duration = width / 50; 
 
   useEffect(() => {
     if (ref.current) {
-      setWidth(ref.current.scrollWidth - ref.current.offsetWidth);
+      setWidth(ref.current.scrollWidth / 2); // 🔥 clave
     }
   }, []);
 
   useEffect(() => {
     if (!dragging && width > 0) {
-      controls.start({
-        x: -width / 2,
-        transition: {
-          duration: 40,
+      const controls = animate(x, -width, {
+          duration,
           ease: "linear",
           repeat: Infinity,
-        },
-      });
+        });
+
+      return () => controls.stop();
     }
-  }, [dragging, width]);
+  }, [width, dragging]);
 
   return (
-    <div className="w-full max-w-lg mx-auto overflow-hidden rounded-xl border border-white/10 bg-white/5">
+    <div className="w-full max-w-lg mx-auto overflow-hidden rounded-xl border border-white/10 bg-white/5 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
       <motion.div
         ref={ref}
         style={{ x }}
         className="flex gap-4 cursor-grab active:cursor-grabbing"
         drag="x"
         dragConstraints={{ left: -width, right: 0 }}
-        animate={controls}
         onDragStart={() => setDragging(true)}
         onDragEnd={() => setDragging(false)}
       >
@@ -91,6 +88,8 @@ function AutoCarousel() {
           <motion.img
             key={i}
             src={f.src}
+            loading="lazy"
+            alt={f.alt}
             className="w-[250px] h-[330px] object-cover rounded-lg shrink-0"
             whileTap={{ scale: 0.95 }}
             draggable={false}

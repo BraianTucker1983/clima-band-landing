@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import climaLogo from "@/assets/logo-clima.png";
-import bgSeguime from "@/assets/seguime-bg.png";
+import climaLogo from "@/assets/logo-clima.webp";
+import bgSeguime from "@/assets/seguime-bg.webp";
 
 export const Route = createFileRoute("/")({
   head: () => ({
