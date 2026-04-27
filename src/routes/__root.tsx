@@ -29,17 +29,33 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+
+      { title: "CLIMA — Banda de Coronel Suárez | Música original" },
+
+      {
+        name: "description",
+        content:
+          "CLIMA es una banda de Coronel Suárez, Argentina. Escuchá nuestra música, conocé a los integrantes y enterate de nuestros próximos shows.",
+      },
+
+      { name: "author", content: "CLIMA" },
+
+      { property: "og:title", content: "CLIMA — Banda Argentina" },
+      {
+        property: "og:description",
+        content:
+          "Descubrí la música de CLIMA, banda de Coronel Suárez. Shows, integrantes y novedades.",
+      },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Lovable App" },
-      { name: "twitter:description", content: "Lovable Generated Project" },
+
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "CLIMA — Banda Argentina" },
+      {
+        name: "twitter:description",
+        content: "Música original, shows y novedades de CLIMA.",
+      },
     ],
+
     links: [
       {
         rel: "stylesheet",
@@ -47,6 +63,7 @@ export const Route = createRootRoute({
       },
     ],
   }),
+
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
