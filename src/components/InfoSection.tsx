@@ -32,8 +32,7 @@ const members = [
     role: "Guitarra · Voz",
     photo: imgJuan,
     socials: {
-      instagram: "https://www.instagram.com/nanomerkel/",
-      youtube: "https://www.youtube.com/@nanomerkel",
+      instagram: "https://www.instagram.com/nanomerkel/",      
     },
   },
   {
