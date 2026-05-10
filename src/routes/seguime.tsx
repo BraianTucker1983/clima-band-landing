@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Youtube, X, Instagram } from "lucide-react";
-import { motion, useMotionValue, animate } from "framer-motion";
+import { ArrowLeft, Youtube, Instagram } from "lucide-react";
+import { motion, useMotionValue, animate, AnimatePresence } from "framer-motion";
 
 import { SocialCard } from "@/components/SocialCard";
 import { InfoSection } from "@/components/InfoSection";
@@ -27,8 +27,15 @@ const fotos = Object.entries(images).map(([path, src]) => ({
   alt: path.split("/").pop()?.split(".")[0] || "foto",
 }));
 
+/* ---------------- TIPOS ---------------- */
+type Tema = {
+  name: string;
+  youtube: string;
+  letra: keyof typeof letras;
+};
+
 /* ---------------- TEMAS ---------------- */
-const temas = [
+const temas: Tema[] = [
   {
     name: "El Lobo Invisible",
     youtube: "https://www.youtube.com/watch?v=wd9jF8u-yJc",
@@ -46,35 +53,51 @@ function getYoutubeId(url: string) {
   return url.split("v=")[1]?.split("&")[0];
 }
 
+/* ---------------- VARIANTES ANIMACIÓN ---------------- */
+const fadeVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 },
+};
+
 /* ---------------- CAROUSEL ---------------- */
-function AutoCarousel() {
+type CarouselProps = {
+  images: { src: string; alt: string }[];
+  speed?: number;
+};
+
+function AutoCarousel({ images, speed = 50 }: CarouselProps) {
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
 
   const [width, setWidth] = useState(0);
   const [dragging, setDragging] = useState(false);
-  const duration = width / 50; 
 
   useEffect(() => {
     if (ref.current) {
-      setWidth(ref.current.scrollWidth / 2); // 🔥 clave
+      setWidth(ref.current.scrollWidth / 2);
     }
-  }, []);
+  }, [images]);
 
   useEffect(() => {
     if (!dragging && width > 0) {
+      const duration = width / speed;
       const controls = animate(x, -width, {
-          duration,
-          ease: "linear",
-          repeat: Infinity,
-        });
-
+        duration,
+        ease: "linear",
+        repeat: Infinity,
+      });
       return () => controls.stop();
     }
-  }, [width, dragging]);
+  }, [width, dragging, speed]);
 
   return (
-    <div className="w-full max-w-lg mx-auto overflow-hidden rounded-xl border border-white/10 bg-white/5 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="w-full max-w-lg mx-auto overflow-hidden rounded-xl border border-white/10 bg-white/5 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
+    >
       <motion.div
         ref={ref}
         style={{ x }}
@@ -84,29 +107,23 @@ function AutoCarousel() {
         onDragStart={() => setDragging(true)}
         onDragEnd={() => setDragging(false)}
       >
-        {[...fotos, ...fotos].map((f, i) => (
+        {[...images, ...images].map((f, i) => (
           <motion.img
             key={i}
             src={f.src}
-            loading="lazy"
             alt={f.alt}
+            loading="lazy"
             className="w-[250px] h-[330px] object-cover rounded-lg shrink-0"
             whileTap={{ scale: 0.95 }}
             draggable={false}
           />
         ))}
       </motion.div>
-    </div>
+    </motion.div>
   );
 }
 
-/* ---------------- PAGE ---------------- */
-function SeguimePage() {
-  const [openPlayer, setOpenPlayer] = useState<number | null>(null);
-  const [showLyrics, setShowLyrics] = useState<number | null>(null);
-  const [openBio, setOpenBio] = useState(false);
-
-  /* LETRAS */
+/* ---------------- LETRAS ---------------- */
 const letras = {
   lobo: `
 Fuí un hermoso niño cursi
@@ -188,13 +205,13 @@ Tras la frontera
   `,
 };
 
-  const togglePlayer = (i: number) => {
-    setOpenPlayer((prev) => (prev === i ? null : i));
-  };
+/* ---------------- PAGE ---------------- */
+function SeguimePage() {
+  const [openPlayer, setOpenPlayer] = useState<number | null>(null);
+  const [showLyrics, setShowLyrics] = useState<number | null>(null);
 
   return (
     <div className="min-h-screen bg-background relative">
-
       {/* BACKGROUND */}
       <div
         className="fixed inset-0 bg-cover bg-center"
@@ -212,7 +229,6 @@ Tras la frontera
 
       {/* CONTENT */}
       <div className="relative z-10 max-w-4xl mx-auto px-6 pb-20 space-y-14">
-
         {/*SOCIALCARD */}
         <div className="flex justify-center w-full">
           <SocialCard
@@ -224,7 +240,7 @@ Tras la frontera
         </div>
 
         {/* CAROUSEL */}
-        <AutoCarousel />
+        <AutoCarousel images={fotos} speed={60} />
 
         {/* INFO */}
         <InfoSection />
@@ -243,7 +259,6 @@ Tras la frontera
                 <span className="font-semibold">{tema.name}</span>
 
                 <div className="flex items-center gap-2">
-
                   {/* YOUTUBE */}
                   <button
                     onClick={() =>
@@ -263,54 +278,71 @@ Tras la frontera
                   >
                     Letra
                   </button>
-
                 </div>
               </div>
 
               {/* 🎬 VIDEO */}
-              {openPlayer === i && (
-                <div className="mt-4">
-                  <iframe
-                    className="w-full aspect-video rounded-lg"
-                    src={`https://www.youtube.com/embed/${getYoutubeId(
-                      tema.youtube
-                    )}?autoplay=1`}
-                    allow="autoplay; encrypted-media"
-                    allowFullScreen
-                  />
-                </div>
-              )}
+              <AnimatePresence>
+                {openPlayer === i && (
+                  <motion.div
+                    key="video"
+                    variants={fadeVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    transition={{ duration: 0.4 }}
+                    className="mt-4"
+                  >
+                    <iframe
+                      className="w-full aspect-video rounded-lg"
+                      src={`https://www.youtube.com/embed/${getYoutubeId(
+                        tema.youtube
+                      )}?autoplay=1`}
+                      allow="autoplay; encrypted-media"
+                      allowFullScreen
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               {/* 📄 LETRA */}
-              {showLyrics === i && (
-                <div className="mt-4 p-4 rounded-lg bg-white/5 border border-white/10 whitespace-pre-line text-sm leading-relaxed text-center">
-                  {letras[tema.letra as keyof typeof letras]}
-                </div>
-              )}
+              <AnimatePresence>
+                {showLyrics === i && (
+                  <motion.div
+                    key="lyrics"
+                    variants={fadeVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    transition={{ duration: 0.6 }}
+                    className="mt-4 p-4 rounded-lg bg-white/5 border border-white/10 whitespace-pre-line text-sm leading-relaxed text-center"
+                  >
+                    {letras[tema.letra]}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           ))}
         </section>
+
         {/* NOVEDADES */}
-        
         <Card title="Novedades">
-        <Novedades />
+          <Novedades />
         </Card>
 
-        
-      {/* CARD BIO */}
+        {/* CARD BIO */}
         <Card title="Historia">
           <Biografia />
         </Card>
 
-      {/* FOOTER */}  
-      <Card>
-        <Footer />
-      </Card>
-
+        {/* FOOTER */}
+        <Card>
+          <Footer />
+        </Card>
+      </div>
     </div>
-  </div>
-
-
-    
   );
 }
+
+
+  
