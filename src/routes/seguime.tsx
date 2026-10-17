@@ -1,3 +1,4 @@
+// src/routes/seguime.tsx
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Youtube, Instagram } from "lucide-react";
@@ -9,6 +10,9 @@ import { Novedades } from "@/components/novedades";
 import { Biografia } from "@/components/biografia";
 import { Footer } from "@/components/footer";
 import { Card } from "@/components/Card";
+import { ClimaAdminGallery } from "@/components/ClimaAdminGallery";
+import { ClimaGalleryPreview } from "@/components/ClimaGalleryPreview";
+import { ClimaGalleryGrid } from "@/components/ClimaGalleryGrid";
 
 import bgSeguime from "@/assets/seguime-bg.webp";
 
@@ -16,7 +20,7 @@ export const Route = createFileRoute("/seguime")({
   component: SeguimePage,
 });
 
-/* ---------------- IMÁGENES ---------------- */
+/* ---------------- IMÁGENES ESTÁTICAS PARA EL CAROUSEL ---------------- */
 const images = import.meta.glob<string>(
   "/src/assets/carousel/*.webp",
   { eager: true, import: "default" }
@@ -209,9 +213,37 @@ Tras la frontera
 function SeguimePage() {
   const [openPlayer, setOpenPlayer] = useState<number | null>(null);
   const [showLyrics, setShowLyrics] = useState<number | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // 🖼️ ESTADO PARA MOSTRAR GALERÍA COMPLETA
+  const [showFullGallery, setShowFullGallery] = useState(false);
+
+  // 🔐 ESTADOS DE SEGURIDAD PARA ADMIN
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [showPinModal, setShowPinModal] = useState(false);
+  const [pinInput, setPinInput] = useState("");
+  const [pinError, setPinError] = useState("");
+
+  const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN;
+
+  const handleAdminLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (pinInput === ADMIN_PIN) {
+      setIsAdmin(true);
+      setShowPinModal(false);
+      setPinInput("");
+      setPinError("");
+    } else {
+      setPinError("Clave incorrecta");
+    }
+  };
+
+  const handleUploadSuccess = () => {
+    setRefreshKey((prev) => prev + 1);
+  };
 
   return (
-    <div className="min-h-screen bg-background relative">
+    <div className="min-h-screen bg-background relative text-white">
       {/* BACKGROUND */}
       <div
         className="fixed inset-0 bg-cover bg-center"
@@ -220,129 +252,215 @@ function SeguimePage() {
       <div className="fixed inset-0 bg-black/70" />
 
       {/* NAV */}
-      <div className="relative z-10 px-6 py-6 max-w-5xl mx-auto">
-        <Link to="/" className="flex items-center gap-2 text-white">
-          <ArrowLeft className="w-5 h-5" />
-          Volver
-        </Link>
+      <div className="relative z-10 px-6 py-6 max-w-5xl mx-auto flex justify-between items-center">
+        {showFullGallery ? (
+          <button
+            onClick={() => setShowFullGallery(false)}
+            className="flex items-center gap-2 text-white hover:text-white/80 transition"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            Volver a la página principal
+          </button>
+        ) : (
+          <Link to="/" className="flex items-center gap-2 text-white">
+            <ArrowLeft className="w-5 h-5" />
+            Volver
+          </Link>
+        )}
+
+        {/* Acceso Admin Discreto */}
+        {!isAdmin && (
+          <button
+            onClick={() => setShowPinModal(true)}
+            className="text-xs text-white/30 hover:text-white/70 transition"
+          >
+            Acceso Admin
+          </button>
+        )}
       </div>
 
       {/* CONTENT */}
       <div className="relative z-10 max-w-4xl mx-auto px-6 pb-20 space-y-14">
-        {/*SOCIALCARD */}
-        <div className="flex justify-center w-full">
-          <SocialCard
-            title="Seguinos en"
-            subtitle="@climamusica"
-            url="https://www.instagram.com/climamusica/"
-            icon={<Instagram className="w-8 h-8 text-white" />}
-          />
-        </div>
-
-        {/* CAROUSEL */}
-        <AutoCarousel images={fotos} speed={60} />
-
-        {/* INFO */}
-        <InfoSection />
-
-        {/* TEMAS */}
-        <section className="bg-white/5 border border-white/10 rounded-xl p-6 space-y-4">
-          <h2 className="text-xl font-bold">Temas</h2>
-
-          {temas.map((tema, i) => (
-            <div
-              key={i}
-              className="border border-white/10 rounded-lg p-4 bg-black/20"
-            >
-              {/* HEADER */}
-              <div className="flex justify-between items-center">
-                <span className="font-semibold">{tema.name}</span>
-
-                <div className="flex items-center gap-2">
-                  {/* YOUTUBE */}
-                  <button
-                    onClick={() =>
-                      setOpenPlayer(openPlayer === i ? null : i)
-                    }
-                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition"
-                  >
-                    <Youtube className="w-5 h-5" />
-                  </button>
-
-                  {/* LETRA */}
-                  <button
-                    onClick={() =>
-                      setShowLyrics(showLyrics === i ? null : i)
-                    }
-                    className="px-3 py-1 text-sm rounded-lg bg-white/10 hover:bg-white/20 transition"
-                  >
-                    Letra
-                  </button>
-                </div>
-              </div>
-
-              {/* 🎬 VIDEO */}
-              <AnimatePresence>
-                {openPlayer === i && (
-                  <motion.div
-                    key="video"
-                    variants={fadeVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    transition={{ duration: 0.4 }}
-                    className="mt-4"
-                  >
-                    <iframe
-                      className="w-full aspect-video rounded-lg"
-                      src={`https://www.youtube.com/embed/${getYoutubeId(
-                        tema.youtube
-                      )}?autoplay=1`}
-                      allow="autoplay; encrypted-media"
-                      allowFullScreen
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* 📄 LETRA */}
-              <AnimatePresence>
-                {showLyrics === i && (
-                  <motion.div
-                    key="lyrics"
-                    variants={fadeVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    transition={{ duration: 0.6 }}
-                    className="mt-4 p-4 rounded-lg bg-white/5 border border-white/10 whitespace-pre-line text-sm leading-relaxed text-center"
-                  >
-                    {letras[tema.letra]}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+        {showFullGallery ? (
+          /* 📸 VISTA DEDICADA A LA GALERÍA COMPLETA (FICHAS LATERALES) */
+          <Card>
+            <ClimaGalleryGrid key={refreshKey} />
+          </Card>
+        ) : (
+          /* VISTA PRINCIPAL REGULAR */
+          <>
+            {/* SOCIALCARD */}
+            <div className="flex justify-center w-full">
+              <SocialCard
+                title="Seguinos en"
+                subtitle="@climamusica"
+                url="https://www.instagram.com/climamusica/"
+                icon={<Instagram className="w-8 h-8 text-white" />}
+              />
             </div>
-          ))}
-        </section>
 
-        {/* NOVEDADES */}
-        <Card title="Novedades">
-          <Novedades />
-        </Card>
+            {/* CAROUSEL (Imágenes locales) */}
+            <AutoCarousel images={fotos} speed={60} />
 
-        {/* CARD BIO */}
-        <Card title="Historia">
-          <Biografia />
-        </Card>
+            {/* 📸 PREVIEW DE FOTOS RECIENTES + BOTÓN "VER GALERÍA COMPLETA" */}
+            <ClimaGalleryPreview
+              key={refreshKey}
+              onOpenFullGallery={() => setShowFullGallery(true)}
+            />
+
+            {/* INFO */}
+            <InfoSection />
+
+            {/* TEMAS */}
+            <section className="bg-white/5 border border-white/10 rounded-xl p-6 space-y-4">
+              <h2 className="text-xl font-bold">Temas</h2>
+
+              {temas.map((tema, i) => (
+                <div
+                  key={i}
+                  className="border border-white/10 rounded-lg p-4 bg-black/20"
+                >
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold">{tema.name}</span>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() =>
+                          setOpenPlayer(openPlayer === i ? null : i)
+                        }
+                        className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition"
+                      >
+                        <Youtube className="w-5 h-5" />
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          setShowLyrics(showLyrics === i ? null : i)
+                        }
+                        className="px-3 py-1 text-sm rounded-lg bg-white/10 hover:bg-white/20 transition"
+                      >
+                        Letra
+                      </button>
+                    </div>
+                  </div>
+
+                  <AnimatePresence>
+                    {openPlayer === i && (
+                      <motion.div
+                        key="video"
+                        variants={fadeVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        transition={{ duration: 0.4 }}
+                        className="mt-4"
+                      >
+                        <iframe
+                          className="w-full aspect-video rounded-lg"
+                          src={`https://www.youtube.com/embed/${getYoutubeId(
+                            tema.youtube
+                          )}?autoplay=1`}
+                          allow="autoplay; encrypted-media"
+                          allowFullScreen
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <AnimatePresence>
+                    {showLyrics === i && (
+                      <motion.div
+                        key="lyrics"
+                        variants={fadeVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        transition={{ duration: 0.6 }}
+                        className="mt-4 p-4 rounded-lg bg-white/5 border border-white/10 whitespace-pre-line text-sm leading-relaxed text-center"
+                      >
+                        {letras[tema.letra]}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ))}
+            </section>
+
+            {/* NOVEDADES */}
+            <Card title="Novedades">
+              <Novedades />
+            </Card>
+
+            {/* CARD BIO */}
+            <Card title="Historia">
+              <Biografia />
+            </Card>
+          </>
+        )}
+
+        {/* 🔒 PANEL DE ADMINISTRACIÓN (SOLO VISIBLE SI ESTÁS LOGUEADO) */}
+        {isAdmin && (
+          <Card title="Panel de Administración">
+            <div className="space-y-4">
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setIsAdmin(false)}
+                  className="text-xs text-red-400 hover:text-red-300 underline"
+                >
+                  Cerrar Sesión Admin
+                </button>
+              </div>
+              <ClimaAdminGallery onUploadSuccess={handleUploadSuccess} />
+            </div>
+          </Card>
+        )}
 
         {/* FOOTER */}
         <Card>
           <Footer />
         </Card>
       </div>
+
+      {/* 🔑 MODAL PARA INGRESAR PIN */}
+      {showPinModal && (
+        <div 
+          onClick={() => setShowPinModal(false)}
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="bg-zinc-900 border border-white/10 p-6 rounded-xl max-w-xs w-full space-y-4 text-white"
+          >
+            <h3 className="text-lg font-bold text-center">Acceso Administrador</h3>
+            <form onSubmit={handleAdminLogin} className="space-y-3">
+              <input
+                type="password"
+                placeholder="Ingresá la clave"
+                value={pinInput}
+                onChange={(e) => setPinInput(e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-center text-white focus:outline-none focus:border-white/30"
+                autoFocus
+              />
+              {pinError && <p className="text-xs text-red-400 text-center">{pinError}</p>}
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowPinModal(false)}
+                  className="w-1/2 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-semibold"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="w-1/2 py-2 rounded-lg bg-white/20 hover:bg-white/30 text-xs font-semibold"
+                >
+                  Ingresar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
-
-  
