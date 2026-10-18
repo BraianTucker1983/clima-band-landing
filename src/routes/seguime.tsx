@@ -1,7 +1,7 @@
 // src/routes/seguime.tsx
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Youtube, Instagram } from "lucide-react";
+import { ArrowLeft, Youtube, Instagram, Disc, ArrowRight, Music } from "lucide-react";
 import { motion, useMotionValue, animate, AnimatePresence } from "framer-motion";
 
 import { SocialCard } from "@/components/SocialCard";
@@ -13,6 +13,10 @@ import { Card } from "@/components/Card";
 import { ClimaAdminGallery } from "@/components/ClimaAdminGallery";
 import { ClimaGalleryPreview } from "@/components/ClimaGalleryPreview";
 import { ClimaGalleryGrid } from "@/components/ClimaGalleryGrid";
+
+// 🎵 NUEVOS COMPONENTES DE AUDIO
+import { ClimaAdminAudio } from "@/components/ClimaAdminAudio";
+import { ClimaMusicLibrary } from "@/components/ClimaMusicLibrary";
 
 import bgSeguime from "@/assets/seguime-bg.webp";
 
@@ -195,7 +199,7 @@ Tras la frontera
 Los siglos que sembramos
 Con lágrimas de tiempo
 Dónde estará mi hermano
-Que hoy no fue a la escuela
+Key hoy no fue a la escuela
 
 No olvides mi nombre
 Quizás nos encontremos
@@ -215,8 +219,9 @@ function SeguimePage() {
   const [showLyrics, setShowLyrics] = useState<number | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // 🖼️ ESTADO PARA MOSTRAR GALERÍA COMPLETA
+  // 🖼️ ESTADOS PARA VISTAS DEDICADAS
   const [showFullGallery, setShowFullGallery] = useState(false);
+  const [showFullMusic, setShowFullMusic] = useState(false); // 🎵 NUEVO ESTADO
 
   // 🔐 ESTADOS DE SEGURIDAD PARA ADMIN
   const [isAdmin, setIsAdmin] = useState(false);
@@ -253,9 +258,12 @@ function SeguimePage() {
 
       {/* NAV */}
       <div className="relative z-10 px-6 py-6 max-w-5xl mx-auto flex justify-between items-center">
-        {showFullGallery ? (
+        {showFullGallery || showFullMusic ? (
           <button
-            onClick={() => setShowFullGallery(false)}
+            onClick={() => {
+              setShowFullGallery(false);
+              setShowFullMusic(false);
+            }}
             className="flex items-center gap-2 text-white hover:text-white/80 transition"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -282,9 +290,14 @@ function SeguimePage() {
       {/* CONTENT */}
       <div className="relative z-10 max-w-4xl mx-auto px-6 pb-20 space-y-14">
         {showFullGallery ? (
-          /* 📸 VISTA DEDICADA A LA GALERÍA COMPLETA (FICHAS LATERALES) */
+          /* 📸 VISTA DEDICADA A LA GALERÍA COMPLETA */
           <Card>
             <ClimaGalleryGrid key={refreshKey} />
+          </Card>
+        ) : showFullMusic ? (
+          /* 🎵 VISTA DEDICADA A LA BIBLIOTECA MUSICAL */
+          <Card>
+            <ClimaMusicLibrary key={refreshKey} />
           </Card>
         ) : (
           /* VISTA PRINCIPAL REGULAR */
@@ -302,18 +315,9 @@ function SeguimePage() {
             {/* CAROUSEL (Imágenes locales) */}
             <AutoCarousel images={fotos} speed={60} />
 
-            {/* 📸 PREVIEW DE FOTOS RECIENTES + BOTÓN "VER GALERÍA COMPLETA" */}
-            <ClimaGalleryPreview
-              key={refreshKey}
-              onOpenFullGallery={() => setShowFullGallery(true)}
-            />
-
-            {/* INFO */}
-            <InfoSection />
-
             {/* TEMAS */}
             <section className="bg-white/5 border border-white/10 rounded-xl p-6 space-y-4">
-              <h2 className="text-xl font-bold">Temas</h2>
+              <h2 className="text-xl font-bold">Disponibles en Streaming</h2>
 
               {temas.map((tema, i) => (
                 <div
@@ -386,9 +390,37 @@ function SeguimePage() {
               ))}
             </section>
 
+            {/* 📸 PREVIEW DE FOTOS RECIENTES + BOTÓN */}
+            <ClimaGalleryPreview
+              key={refreshKey}
+              onOpenFullGallery={() => setShowFullGallery(true)}
+            />
+
+            {/* 🎵 BOTÓN / ACCESO RÁPIDO A LA BIBLIOTECA MUSICAL */}
+            <div className="w-full max-w-6xl mx-auto p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 text-white/60 text-xs uppercase tracking-widest mb-1">
+                  <Disc className="w-4 h-4 text-white animate-spin" />
+                  Canciones de estudio y en vivo
+                </div>
+                <h2 className="text-2xl font-bold text-white">Canciones</h2>
+              </div>
+
+              <button
+                onClick={() => setShowFullMusic(true)}
+                className="flex items-center gap-2 px-5 py-2.5 bg-white text-black font-semibold rounded-xl hover:bg-white/90 transition shadow-lg text-sm"
+              >
+                <span>Ver Biblioteca</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* INFO */}
+            <InfoSection />            
+
             {/* NOVEDADES */}
             <Card title="Novedades">
-              <Novedades />
+              <Novedades isAdmin={isAdmin} />
             </Card>
 
             {/* CARD BIO */}
@@ -401,7 +433,7 @@ function SeguimePage() {
         {/* 🔒 PANEL DE ADMINISTRACIÓN (SOLO VISIBLE SI ESTÁS LOGUEADO) */}
         {isAdmin && (
           <Card title="Panel de Administración">
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div className="flex justify-end">
                 <button
                   onClick={() => setIsAdmin(false)}
@@ -410,7 +442,12 @@ function SeguimePage() {
                   Cerrar Sesión Admin
                 </button>
               </div>
+              
+              {/* Panel de Fotos */}
               <ClimaAdminGallery onUploadSuccess={handleUploadSuccess} />
+
+              {/* Panel de Audio (NUEVO) */}
+              <ClimaAdminAudio onUploadSuccess={handleUploadSuccess} />
             </div>
           </Card>
         )}
