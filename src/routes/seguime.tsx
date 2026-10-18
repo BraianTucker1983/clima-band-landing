@@ -1,7 +1,7 @@
 // src/routes/seguime.tsx
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Youtube, Instagram, Disc, ArrowRight, Music } from "lucide-react";
+import { ArrowLeft, Youtube, Instagram, Disc, ArrowRight } from "lucide-react";
 import { motion, useMotionValue, animate, AnimatePresence } from "framer-motion";
 
 import { SocialCard } from "@/components/SocialCard";
@@ -14,7 +14,7 @@ import { ClimaAdminGallery } from "@/components/ClimaAdminGallery";
 import { ClimaGalleryPreview } from "@/components/ClimaGalleryPreview";
 import { ClimaGalleryGrid } from "@/components/ClimaGalleryGrid";
 
-// 🎵 NUEVOS COMPONENTES DE AUDIO
+// 🎵 COMPONENTES DE AUDIO
 import { ClimaAdminAudio } from "@/components/ClimaAdminAudio";
 import { ClimaMusicLibrary } from "@/components/ClimaMusicLibrary";
 
@@ -221,7 +221,7 @@ function SeguimePage() {
 
   // 🖼️ ESTADOS PARA VISTAS DEDICADAS
   const [showFullGallery, setShowFullGallery] = useState(false);
-  const [showFullMusic, setShowFullMusic] = useState(false); // 🎵 NUEVO ESTADO
+  const [showFullMusic, setShowFullMusic] = useState(false);
 
   // 🔐 ESTADOS DE SEGURIDAD PARA ADMIN
   const [isAdmin, setIsAdmin] = useState(false);
@@ -256,7 +256,7 @@ function SeguimePage() {
       />
       <div className="fixed inset-0 bg-black/70" />
 
-      {/* NAV */}
+      {/* NAV (HEADER LIMPIO) */}
       <div className="relative z-10 px-6 py-6 max-w-5xl mx-auto flex justify-between items-center">
         {showFullGallery || showFullMusic ? (
           <button
@@ -274,16 +274,6 @@ function SeguimePage() {
             <ArrowLeft className="w-5 h-5" />
             Volver
           </Link>
-        )}
-
-        {/* Acceso Admin Discreto */}
-        {!isAdmin && (
-          <button
-            onClick={() => setShowPinModal(true)}
-            className="text-xs text-white/30 hover:text-white/70 transition"
-          >
-            Acceso Admin
-          </button>
         )}
       </div>
 
@@ -312,7 +302,7 @@ function SeguimePage() {
               />
             </div>
 
-            {/* CAROUSEL (Imágenes locales) */}
+            {/* CAROUSEL */}
             <AutoCarousel images={fotos} speed={60} />
 
             {/* TEMAS */}
@@ -390,13 +380,13 @@ function SeguimePage() {
               ))}
             </section>
 
-            {/* 📸 PREVIEW DE FOTOS RECIENTES + BOTÓN */}
+            {/* PREVIEW DE FOTOS RECIENTES */}
             <ClimaGalleryPreview
               key={refreshKey}
               onOpenFullGallery={() => setShowFullGallery(true)}
             />
 
-            {/* 🎵 BOTÓN / ACCESO RÁPIDO A LA BIBLIOTECA MUSICAL */}
+            {/* BIBLIOTECA MUSICAL */}
             <div className="w-full max-w-6xl mx-auto p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 text-white/60 text-xs uppercase tracking-widest mb-1">
@@ -430,7 +420,7 @@ function SeguimePage() {
           </>
         )}
 
-        {/* 🔒 PANEL DE ADMINISTRACIÓN (SOLO VISIBLE SI ESTÁS LOGUEADO) */}
+        {/* 🔒 PANEL DE ADMINISTRACIÓN */}
         {isAdmin && (
           <Card title="Panel de Administración">
             <div className="space-y-6">
@@ -443,22 +433,19 @@ function SeguimePage() {
                 </button>
               </div>
               
-              {/* Panel de Fotos */}
               <ClimaAdminGallery onUploadSuccess={handleUploadSuccess} />
-
-              {/* Panel de Audio (NUEVO) */}
               <ClimaAdminAudio onUploadSuccess={handleUploadSuccess} />
             </div>
           </Card>
         )}
 
-        {/* FOOTER */}
+        {/* FOOTER CON BOTÓN ADMIN INTEGRADO */}
         <Card>
-          <Footer />
+          <Footer onOpenAdmin={() => setShowPinModal(true)} isAdmin={isAdmin} />
         </Card>
       </div>
 
-      {/* 🔑 MODAL PARA INGRESAR PIN */}
+      {/* 🔑 MODAL PIN */}
       {showPinModal && (
         <div 
           onClick={() => setShowPinModal(false)}
