@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "convert:images": "node scripts/convert-images.js"
+    "convert:images": "node scripts/convert-images.js",
+    "deploy": "vite build && wrangler pages deploy dist"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
